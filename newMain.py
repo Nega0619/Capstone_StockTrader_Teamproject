@@ -8,6 +8,8 @@ import settings
 import utils
 import data_manager
 
+#94라인에서 for stock_code in args? argc.stock_code에서 NoneType은 iterable할수없다하길래 if not None일 경우 추가해줌
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -91,65 +93,66 @@ if __name__ == '__main__':
     list_min_trading_unit = []
     list_max_trading_unit = []
 
-    for stock_code in args.stock_code:
-        # 차트 데이터, 학습 데이터 준비
-        chart_data, training_data = data_manager.load_data(
-            os.path.join(settings.BASE_DIR, 
-            'data/{}/{}.csv'.format(args.ver, stock_code)), 
-            args.start_date, args.end_date, ver=args.ver)
-        
-        # 최소/최대 투자 단위 설정
-        min_trading_unit = max(int(100000 / chart_data.iloc[-1]['close']), 1)
-        max_trading_unit = max(int(1000000 / chart_data.iloc[-1]['close']), 1)
+    if(args.stock_code != None):
+        for stock_code in args.stock_code:
+            # 차트 데이터, 학습 데이터 준비
+            chart_data, training_data = data_manager.load_data(
+                os.path.join(settings.BASE_DIR, 
+                'data/{}/{}.csv'.format(args.ver, stock_code)), 
+                args.start_date, args.end_date, ver=args.ver)
+            
+            # 최소/최대 투자 단위 설정
+            min_trading_unit = max(int(100000 / chart_data.iloc[-1]['close']), 1)
+            max_trading_unit = max(int(1000000 / chart_data.iloc[-1]['close']), 1)
 
-        # 공통 파라미터 설정
-        common_params = {'rl_method': args.rl_method, 
-            'delayed_reward_threshold': args.delayed_reward_threshold,
-            'net': args.net, 'num_steps': args.num_steps, 'lr': args.lr,
-            'output_path': output_path, 'reuse_models': args.reuse_models}
+            # 공통 파라미터 설정
+            common_params = {'rl_method': args.rl_method, 
+                'delayed_reward_threshold': args.delayed_reward_threshold,
+                'net': args.net, 'num_steps': args.num_steps, 'lr': args.lr,
+                'output_path': output_path, 'reuse_models': args.reuse_models}
 
-        # 강화학습 시작
-        learner = None
-        if args.rl_method != 'a3c':
-            common_params.update({'stock_code': stock_code,
-                'chart_data': chart_data, 
-                'training_data': training_data,
-                'min_trading_unit': min_trading_unit, 
-                'max_trading_unit': max_trading_unit})
-            if args.rl_method == 'dqn':
-                learner = DQNLearner(**{**common_params, 
-                'value_network_path': value_network_path})
-            elif args.rl_method == 'pg':
-                learner = PolicyGradientLearner(**{**common_params, 
-                'policy_network_path': policy_network_path})
-            elif args.rl_method == 'ac':
-                learner = ActorCriticLearner(**{**common_params, 
-                    'value_network_path': value_network_path, 
+            # 강화학습 시작
+            learner = None
+            if args.rl_method != 'a3c':
+                common_params.update({'stock_code': stock_code,
+                    'chart_data': chart_data, 
+                    'training_data': training_data,
+                    'min_trading_unit': min_trading_unit, 
+                    'max_trading_unit': max_trading_unit})
+                if args.rl_method == 'dqn':
+                    learner = DQNLearner(**{**common_params, 
+                    'value_network_path': value_network_path})
+                elif args.rl_method == 'pg':
+                    learner = PolicyGradientLearner(**{**common_params, 
                     'policy_network_path': policy_network_path})
-            elif args.rl_method == 'a2c':
-                learner = A2CLearner(**{**common_params, 
-                    'value_network_path': value_network_path, 
-                    'policy_network_path': policy_network_path})
-            elif args.rl_method == 'monkey':
-                args.net = args.rl_method
-                args.num_epoches = 1
-                args.discount_factor = None
-                args.start_epsilon = 1
-                args.learning = False
-                learner = ReinforcementLearner(**common_params)
-            if learner is not None:
-                learner.run(balance=args.balance, 
-                    num_epoches=args.num_epoches, 
-                    discount_factor=args.discount_factor, 
-                    start_epsilon=args.start_epsilon,
-                    learning=args.learning)
-                learner.save_models()
-        else:
-            list_stock_code.append(stock_code)
-            list_chart_data.append(chart_data)
-            list_training_data.append(training_data)
-            list_min_trading_unit.append(min_trading_unit)
-            list_max_trading_unit.append(max_trading_unit)
+                elif args.rl_method == 'ac':
+                    learner = ActorCriticLearner(**{**common_params, 
+                        'value_network_path': value_network_path, 
+                        'policy_network_path': policy_network_path})
+                elif args.rl_method == 'a2c':
+                    learner = A2CLearner(**{**common_params, 
+                        'value_network_path': value_network_path, 
+                        'policy_network_path': policy_network_path})
+                elif args.rl_method == 'monkey':
+                    args.net = args.rl_method
+                    args.num_epoches = 1
+                    args.discount_factor = None
+                    args.start_epsilon = 1
+                    args.learning = False
+                    learner = ReinforcementLearner(**common_params)
+                if learner is not None:
+                    learner.run(balance=args.balance, 
+                        num_epoches=args.num_epoches, 
+                        discount_factor=args.discount_factor, 
+                        start_epsilon=args.start_epsilon,
+                        learning=args.learning)
+                    learner.save_models()
+            else:
+                list_stock_code.append(stock_code)
+                list_chart_data.append(chart_data)
+                list_training_data.append(training_data)
+                list_min_trading_unit.append(min_trading_unit)
+                list_max_trading_unit.append(max_trading_unit)
 
     if args.rl_method == 'a3c':
         learner = A3CLearner(**{
