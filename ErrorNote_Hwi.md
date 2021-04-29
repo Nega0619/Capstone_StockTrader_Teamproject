@@ -10,7 +10,11 @@ Python 3.7.6 64 bit - IDE	(RLtrader에서는 64bit 필요로함.)
 
 
 
-아나콘다?
+아나콘다 5.3.0 64bit -> 32 비트 설치. 파이참에서 인터프리터 할당.
+
+Python IDE 3.7.9 64bit -> 파이참에서 인터프리터 할당
+
+
 
 https://repo.anaconda.com/archive/
 
@@ -21,6 +25,8 @@ https://repo.anaconda.com/archive/
 설치 방법 cmd창에 (pip install numpy==1.18.1)
 
 
+
+## 64bit
 
 Numpy 1.18.1 
 
@@ -35,6 +41,16 @@ tensorflow 1.15
 (파이썬 3.8버전 이상에서는 안돌아가므로 꼭 3.8미만으로 설치, python 64bit 이상이여야 함.)
 
 plaidml-keras 0.6.2
+
+
+
+## 32bit
+
+pyqt5==5.12.1
+
+pyqtwebengine==5.12.1
+
+pykiwoom
 
 
 
