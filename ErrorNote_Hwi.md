@@ -1,3 +1,10 @@
+# 사용할 종목코드
+
+- 삼성전자 우선주 005935
+- 카카오 035720
+
+
+
 # 환경 설명
 
 
@@ -54,8 +61,39 @@ pykiwoom
 
 
 
-# 참고 사이트
+## 참고 사이트
 
 - 퀀트투자를위한 키움 OpenAPI 사용법
 
   https://wikidocs.net/77481
+
+
+
+# 버전처리를 받으시려면 현재 실행중인 OpenAPI OCX ~~
+
+![image-20210429143348200](C:\Users\gleyd\AppData\Roaming\Typora\typora-user-images\image-20210429143348200.png)
+
+
+
+C:\openAPI에서  `opversionup.exe` 실행 후 다시 실행
+
+
+
+# csv 파일 만들기
+
+
+
+## 웹크롤링 - 종목코드 가져오기
+
+https://lifeonroom.com/study-lab/get-stock-code-price/
+
+
+
+## 코딩으로
+
+https://m.blog.naver.com/PostView.nhn?blogId=whdghk414141&logNo=221105259323&proxyReferer=https:%2F%2Fwww.google.com%2F
+
+
+
+- 파이썬 pandas에서 csv파일쓰는 방법
+- https://wikidocs.net/43280
