@@ -19,14 +19,7 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bb889dcb-5724-47c7-a887-78b0a8770a12" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/Capstone_StockTrader_Teamproject.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Capstone_StockTrader_Teamproject.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/32bit/CommConnect.py" beforeDir="false" afterPath="$PROJECT_DIR$/32bit/CommConnect.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/32bit/SamsungElectronics_StockBasicInformation.csv" beforeDir="false" afterPath="$PROJECT_DIR$/32bit/SamsungElectronics_StockBasicInformation.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ErrorNote_Yejin.md" beforeDir="false" afterPath="$PROJECT_DIR$/ErrorNote_Yejin.md" afterDir="false" />
-    </list>
+    <list default="true" id="bb889dcb-5724-47c7-a887-78b0a8770a12" name="Default Changelist" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

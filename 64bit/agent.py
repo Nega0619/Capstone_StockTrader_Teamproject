@@ -135,7 +135,7 @@ class Agent:
         if np.isnan(confidence):
             return self.min_trading_unit
         added_traiding = max(min(
-            int(confidence  (self.max_trading_unit - 
+            int(confidence * (self.max_trading_unit -
                 self.min_trading_unit)),
             self.max_trading_unit-self.min_trading_unit
         ), 0)
@@ -163,7 +163,7 @@ class Agent:
             if balance < 0:
                 trading_unit = max(
                     min(
-                        int(self.balance  (
+                        int(self.balance / (
                             curr_price * (1 + self.TRADING_CHARGE))),
                         self.max_trading_unit
                     ),
@@ -184,7 +184,7 @@ class Agent:
             # 보유 주식이 모자랄 경우 가능한 만큼 최대한 매도
             trading_unit = min(trading_unit, self.num_stocks)
             # 매도
-            invest_amount = curr_price  (
+            invest_amount = curr_price * (
                 1 - (self.TRADING_TAX + self.TRADING_CHARGE)) \
                     * trading_unit
             if invest_amount > 0:
