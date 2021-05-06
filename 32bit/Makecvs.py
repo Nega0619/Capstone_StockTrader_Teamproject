@@ -1,3 +1,4 @@
+import csv
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QAxContainer import *
@@ -73,6 +74,8 @@ class Kiwoom(QAxWidget):
             pass
 
     def _opt10081(self, rqname, trcode):
+        input_data = []
+        input_data.clear()
         data_cnt = self._get_repeat_cnt(trcode, rqname)
 
         for i in range(data_cnt):
@@ -83,6 +86,24 @@ class Kiwoom(QAxWidget):
             close = self._comm_get_data(trcode, "", rqname, i, "현재가")
             volume = self._comm_get_data(trcode, "", rqname, i, "거래량")
             print(date, open, high, low, close, volume)
+            input_data.append((date, open, high, low, close, volume))
+
+        self.saveData(rqname, input_data)
+
+
+
+    def saveData(self, itemcode, data):
+        f = open('./Data/' + 'data.csv', 'w', encoding='utf-8', newline='')
+        wr = csv.writer(f)
+
+        for line in data:
+            wr.writerow(line)
+        f.close()
+
+        print(itemcode, " 저장")
+
+        self.input_data.clear()
+        # self.repeatNum = 0
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)
