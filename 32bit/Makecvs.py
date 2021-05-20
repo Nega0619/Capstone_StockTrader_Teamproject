@@ -90,8 +90,6 @@ class Kiwoom(QAxWidget):
 
         self.saveData(rqname, input_data)
 
-
-
     def saveData(self, itemcode, data):
         f = open('./Data/' + 'data.csv', 'w', encoding='utf-8', newline='')
         wr = csv.writer(f)
@@ -106,7 +104,6 @@ class Kiwoom(QAxWidget):
         # self.repeatNum = 0
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
     kiwoom = Kiwoom()
     kiwoom.comm_connect()
 
