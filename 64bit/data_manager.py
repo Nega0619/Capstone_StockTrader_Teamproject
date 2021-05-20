@@ -59,18 +59,7 @@ def preprocess(data, ver='v1'):
         data['volume_ma%d_ratio' % window] = \
             (data['volume'] - data['volume_ma%d' % window]) \
             / data['volume_ma%d' % window]
-            
-        if ver == 'v1.rich':
-            data['inst_ma{}'.format(window)] = \
-                data['close'].rolling(window).mean()
-            data['frgn_ma{}'.format(window)] = \
-                data['volume'].rolling(window).mean()
-            data['inst_ma%d_ratio' % window] = \
-                (data['close'] - data['inst_ma%d' % window]) \
-                / data['inst_ma%d' % window]
-            data['frgn_ma%d_ratio' % window] = \
-                (data['volume'] - data['frgn_ma%d' % window]) \
-                / data['frgn_ma%d' % window]
+
 
     data['open_lastclose_ratio'] = np.zeros(len(data))
     data.loc[1:, 'open_lastclose_ratio'] = \
@@ -93,24 +82,10 @@ def preprocess(data, ver='v1'):
             .replace(to_replace=0, method='ffill') \
             .replace(to_replace=0, method='bfill').values
 
-    if ver == 'v1.rich':
-        data['inst_lastinst_ratio'] = np.zeros(len(data))
-        data.loc[1:, 'inst_lastinst_ratio'] = \
-            (data['inst'][1:].values - data['inst'][:-1].values) \
-            / data['inst'][:-1] \
-                .replace(to_replace=0, method='ffill') \
-                .replace(to_replace=0, method='bfill').values
-        data['frgn_lastfrgn_ratio'] = np.zeros(len(data))
-        data.loc[1:, 'frgn_lastfrgn_ratio'] = \
-            (data['frgn'][1:].values - data['frgn'][:-1].values) \
-            / data['frgn'][:-1] \
-                .replace(to_replace=0, method='ffill') \
-                .replace(to_replace=0, method='bfill').values
-
     return data
 
 
-def load_data(fpath, date_from, date_to, ver='v2'):
+def load_data(fpath, date_from, date_to, ver='v1'):
     header = None if ver == 'v1' else 0
     data = pd.read_csv(fpath, thousands=',', header=header, 
         converters={'date': lambda x: str(x)})
@@ -125,9 +100,10 @@ def load_data(fpath, date_from, date_to, ver='v2'):
     data = preprocess(data)
     
     # 기간 필터링
-    data['date'] = data['date'].str.replace('-', '')
-    data = data[(data['date'] >= date_from) & (data['date'] <= date_to)]
-    data = data.dropna()
+    #ata['date'] = data['date'].str.replace('-', '')
+#    data = data[(data['date'] >= date_from) & (data['date'] <= date_to)]
+ #   data = data.dropna()
+
 
     # 차트 데이터 분리
     chart_data = data[COLUMNS_CHART_DATA]
@@ -136,13 +112,6 @@ def load_data(fpath, date_from, date_to, ver='v2'):
     training_data = None
     if ver == 'v1':
         training_data = data[COLUMNS_TRAINING_DATA_V1]
-    elif ver == 'v1.rich':
-        training_data = data[COLUMNS_TRAINING_DATA_V1_RICH]
-    elif ver == 'v2':
-        data.loc[:, ['per', 'pbr', 'roe']] = \
-            data[['per', 'pbr', 'roe']].apply(lambda x: x / 100)
-        training_data = data[COLUMNS_TRAINING_DATA_V2]
-        training_data = training_data.apply(np.tanh)
     else:
         raise Exception('Invalid version.')
     

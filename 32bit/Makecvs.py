@@ -1,9 +1,12 @@
-import csv
 import sys
 from PyQt5.QtWidgets import *
 from PyQt5.QAxContainer import *
 from PyQt5.QtCore import *
 import time
+import csv
+
+from pandas import DataFrame
+from pykiwoom.kiwoom import *
 
 TR_REQ_TIME_INTERVAL = 0.2
 
@@ -74,9 +77,9 @@ class Kiwoom(QAxWidget):
             pass
 
     def _opt10081(self, rqname, trcode):
+        data_cnt = self._get_repeat_cnt(trcode, rqname)
         input_data = []
         input_data.clear()
-        data_cnt = self._get_repeat_cnt(trcode, rqname)
 
         for i in range(data_cnt):
             date = self._comm_get_data(trcode, "", rqname, i, "일자")
@@ -85,37 +88,79 @@ class Kiwoom(QAxWidget):
             low = self._comm_get_data(trcode, "", rqname, i, "저가")
             close = self._comm_get_data(trcode, "", rqname, i, "현재가")
             volume = self._comm_get_data(trcode, "", rqname, i, "거래량")
-            print(date, open, high, low, close, volume)
-            input_data.append((date, open, high, low, close, volume))
+            #print(date, open, high, low, close, volume)
+            input_data.append([date, open, high, low, close, volume])
 
-        self.saveData(rqname, input_data)
+        df = DataFrame(input_data, columns=['date', 'open', 'high', 'low', 'close', 'volume'])
+        print(df)
+        df.to_csv("005930.csv", index=False)
 
-    def saveData(self, itemcode, data):
-        f = open('./Data/' + 'data.csv', 'w', encoding='utf-8', newline='')
-        wr = csv.writer(f)
-
-        for line in data:
-            wr.writerow(line)
-        f.close()
-
-        print(itemcode, " 저장")
-
-        self.input_data.clear()
-        # self.repeatNum = 0
 
 if __name__ == "__main__":
+    app = QApplication(sys.argv)
     kiwoom = Kiwoom()
     kiwoom.comm_connect()
 
     # opt10081 TR 요청
     kiwoom.set_input_value("종목코드", "039490")
-    kiwoom.set_input_value("기준일자", "20170224")
+    kiwoom.set_input_value("기준일자", "20210101")
     kiwoom.set_input_value("수정주가구분", 1)
     kiwoom.comm_rq_data("opt10081_req", "opt10081", 0, "0101")
 
-    while kiwoom.remained_data == True:
-        time.sleep(TR_REQ_TIME_INTERVAL)
-        kiwoom.set_input_value("종목코드", "039490")
-        kiwoom.set_input_value("기준일자", "20170224")
-        kiwoom.set_input_value("수정주가구분", 1)
-        kiwoom.comm_rq_data("opt10081_req", "opt10081", 2, "0101")
+
+"""
+# TR 요청 (연속조회)
+dfs = []
+df = kiwoom.block_request("opt10081",
+                          종목코드="005930",
+                          기준일자="20200424",
+                          수정주가구분=1,
+                          output="주식일봉차트조회",
+                          next=0)
+print(df.head())
+dfs.append(df)
+
+while kiwoom.tr_remained:
+    df = kiwoom.block_request("opt10081",
+                              종목코드="005930",
+                              기준일자="20200424",
+                              수정주가구분=1,
+                              output="주식일봉차트조회",
+                              next=2)
+    dfs.append(df)
+    time.sleep(1)
+"""
+"""
+trcode = "OPT10081"
+rqname= "opt10081_req"
+input_data = []
+input_data.clear()
+
+kiwoom = Kiwoom()
+kiwoom.CommConnect(block=True)
+
+
+# opt10081 TR 요청
+kiwoom.SetInputValue("종목코드", "005930")
+kiwoom.SetInputValue("기준일자", "20170224")
+kiwoom.SetInputValue("수정주가구분", 1)
+kiwoom.CommRqData(rqname, trcode, 0, "0101")
+
+data_cnt = kiwoom.GetRepeatCnt(trcode, rqname)
+
+for i in range(data_cnt):
+    date = kiwoom.CommGetData(trcode, "", rqname, i, "일자")
+    open = kiwoom.CommGetData(trcode, "", rqname, i, "시가")
+    high = kiwoom.CommGetData(trcode, "", rqname, i, "고가")
+    low = kiwoom.CommGetData(trcode, "", rqname, i, "저가")
+    close = kiwoom.CommGetData(trcode, "", rqname, i, "현재가")
+    volume = kiwoom.CommGetData(trcode, "", rqname, i, "거래량")
+    input_data.append([date, open, high, low, close, volume])
+
+df = DataFrame(input_data, columns=['date', 'open', 'high', 'low', 'close', 'volume'])
+print(df)
+df.to_csv("005930.csv", index=False)
+
+
+
+"""
