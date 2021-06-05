@@ -201,7 +201,7 @@ class Agent:
             * self.num_stocks
         self.profitloss = (
             (self.portfolio_value - self.initial_balance) \
-                / self.initial_balance
+            / self.initial_balance
         )
         
         # 즉시 보상 - 수익률
@@ -211,7 +211,7 @@ class Agent:
         delayed_reward = 0
         self.base_profitloss = (
             (self.portfolio_value - self.base_portfolio_value) \
-               /  self.base_portfolio_value
+            /  self.base_portfolio_value
         )
         if self.base_profitloss > self.delayed_reward_threshold or \
             self.base_profitloss < -self.delayed_reward_threshold:
