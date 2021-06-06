@@ -10,10 +10,9 @@ import data_manager
 
 #94라인에서 for stock_code in args? argc.stock_code에서 NoneType은 iterable할수없다하길래 if not None일 경우 추가해줌
 
-
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('--stock_code', nargs='+')
+    parser.add_argument('--stock_code', nargs='+', default='005930')
     parser.add_argument('--ver', choices=['v1', 'v2'], default='v2')
     parser.add_argument('--rl_method', 
         choices=['dqn', 'pg', 'ac', 'a2c', 'a3c', 'monkey'])
