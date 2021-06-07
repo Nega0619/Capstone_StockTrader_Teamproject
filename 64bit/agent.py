@@ -132,6 +132,7 @@ class Agent:
         return True
 
     def decide_trading_unit(self, confidence):
+        #isnan : 숫자아닌지 체크
         if np.isnan(confidence):
             return self.min_trading_unit
         added_traiding = max(min(

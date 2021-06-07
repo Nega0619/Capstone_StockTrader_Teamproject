@@ -1,6 +1,9 @@
 from tkinter import *
 from tkinter import filedialog
-import main
+import learning_starter
+
+from functools import partial
+
 import numpy as np
 
 if __name__ == '__main__':
@@ -25,7 +28,7 @@ if __name__ == '__main__':
     def getCSV():
         files = filedialog.askopenfilename(title="학습시킬 데이터 CSV파일을 선택하세요.", \
                                            filetypes=(("CSV 파일", "*.csv"),("모든 파일", "*.*")),\
-                                           initialdir="C:/Users/920/Documents/GitHub/Capstone_StockTrader_Teamproject/64bit\data/v2")
+                                           initialdir="C:/Users/gleyd/Desktop/Github/Capstone_StockTrader_Teamproject/64bit/data/v2")
         #print(files)
         entry.insert(END,files) # 다시 클릭해서 추가하면 파일 경로가 이어진다...
 
@@ -62,6 +65,7 @@ if __name__ == '__main__':
         e_balance.get()
 
         
-    #btn_learn = Button(root, text="학습하기", command=main.main()) # 오류가 떠서 일단 주석 처리함
+    btn_learn = Button(root, text="학습하기", command=partial(learning_starter.start_learning, 2)) # 오류가 떠서 일단 주석 처리함
+    btn_learn.pack()
 
     root.mainloop()
